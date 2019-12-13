@@ -40,4 +40,4 @@ Releasing this with initial version of 1.0.0
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the <a href="https://en.wikipedia.org/wiki/MIT_License" target="_blank">MIT</a> file for details
