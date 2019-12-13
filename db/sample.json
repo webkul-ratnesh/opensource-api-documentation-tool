@@ -1,0 +1,71 @@
+{
+    "main-domain": "http://domain_of_api_source/",
+    "main-description": "This is the description of this whole documentation",
+    "access": [
+        "test@example.com"
+    ],
+    "group-list": [
+        {
+            "group": "Api_Group",
+            "description": "This will be description of this api group.",
+            "api-list": [
+                {
+                    "api-name": "Api Name",
+                    "api-description": "Api Description",
+                    "api-endpoint": "endpoint/of/api",
+                    "api-method": "Method name wiz. GET/POST/DELETE/PUT",
+                    "api-params": [
+                        {
+                            "key-name": "param 1",
+                            "description": "Param 1 description",
+                            "data-type": "integer",
+                            "required": false,
+                            "possible-values": "value can only be string, in case of json it should be stringify"
+                        },
+                        {
+                            "key-name": "param 2",
+                            "description": "param 2 description",
+                            "data-type": "string",
+                            "required": true,
+                            "possible-values": "any value that is expected"
+                        }
+                    ],
+                    "api-response": [
+                        {
+                            "key-name": "response 1",
+                            "description": "response 1 description",
+                            "data-type": "boolean",
+                            "possible-values": "true OR false"
+                        },
+                        {
+                            "key-name": "response 2",
+                            "description": "response 2 description",
+                            "data-type": "string",
+                            "possible-values": "any value that is expected"
+                        }
+                    ],
+                    "request-header-params": [
+                        {
+                            "key-name": "authKey",
+                            "description": "description about it, can be used as token authetication",
+                            "data-type": "string",
+                            "possible-values": "745FAB89D175501ECFE2E9DC3D7DDD00"
+                        }
+                    ],
+                    "response-header-params": [
+                        {
+                            "key-name": "token",
+                            "description": "any header response if required",
+                            "data-type": "string",
+                            "possible-values": "3dh73smv4k4qr157a65u6jun46"
+                        }
+                    ],
+                    "possible-values": {
+                        "success": true,
+                        "message": "possible values can only be json"
+                    }
+                }
+            ]
+        }
+    ]
+}
