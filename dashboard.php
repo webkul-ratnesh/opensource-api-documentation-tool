@@ -13,6 +13,7 @@ if (isset($_SESSION["userName"]) && $_SESSION["userName"] != "") {
 <html>
     <head>
         <link rel="shortcut icon" type="image/png" href="images/favicon.png"/>
+        <link rel="shortcut icon" type="image/png" href="https://miad.mobikul.com/images/favicon.png"/>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="css/styles.css?v=1.3" rel="stylesheet"/>
         <link href="css/jquery.json-viewer.css?v=1.3" rel="stylesheet"/>
@@ -776,6 +777,15 @@ if (isset($_SESSION["userName"]) && $_SESSION["userName"] != "") {
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="profiling_block">
+                            <div class="profiling_each_block">
+                                <input type="checkbox" id="enable_profiling"/>
+                                <label for="enable_profiling">Enable Profiling</label>
+                            </div>
+                            <div class="profiling_each_block">
+                                <input id="profiling_frequency" type="number" placeholder="Provide Profiling Frequency, Default is 10"/>
+                            </div>
                         </div>
                         <div class="response_summary">
                             <div class="response_one_summary">

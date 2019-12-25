@@ -496,8 +496,11 @@ select:-moz-focusring {
     padding: 13px 10px;
 }
 .api_list_table td:last-child{
-    width: 15%;
-    text-align: center;
+    width: 20%;
+    text-align: right;
+}
+.api_list_table thead tr td:last-child{
+    padding-right: 44px;
 }
 .api_list_table thead tr{
     background: #F1F3F6;
@@ -1120,6 +1123,28 @@ table {
     margin: 0px 30px;
     background-color: #ededed;
 }
+.profiling_block{
+    padding: 10px;
+    margin: 10px 30px;
+    background-color: #ededed;
+}
+.modalbox_content b {
+    color: #000000;
+}
+.profiling_each_block{
+    margin: 10px;
+    min-width: 18%;
+    font-size: 10px;
+}
+.profiling_each_block label{
+    font-size: 15px;
+    vertical-align: top;
+}
+.profiling_each_block input[type=number]{
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #c7c7c7;
+}
 .response_one_summary{
     font-size: 10px;
     max-width: 20%;
@@ -1167,4 +1192,7 @@ table {
     overflow: hidden;
     border-radius: 2px;
     position: relative;
+}
+.logout_button{
+    color: #f21e1e;
 }

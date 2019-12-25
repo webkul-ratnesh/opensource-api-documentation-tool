@@ -1,5 +1,8 @@
 var db = $(".form_selection").val();
 var changedGroup = "";
+var averageTime = 0;
+var frequency = 10;
+var runnerCounter = 1;
 var options = {
     collapsed: false,
     withQuotes: false
@@ -676,7 +679,7 @@ function errorNotification(content)
 function successNotification(content)
 {
     $(".modalbox_message_indicator").text("check_circle_outline");
-    $(".modalbox_content").text(content);
+    $(".modalbox_content").html(content);
     $(".modalbox_title").text("Success Message");
     $(".modalbox_overlay").fadeIn();
     $(".modalbox").animate({"top":"50%"});
@@ -812,43 +815,112 @@ $(".run_api_send").on("click", function(){
         localStorage.runheaders = JSON.stringify(headers);
         localStorage.runurlEndPoint = urlEndPoint;
         $(".loader_container").show();
-        $.ajax({
-            url: "run",
-            type: "POST",
-            dataType: "json",
-            data: {
-                method: method,
-                params: params,
-                headers: headers,
-                urlEndPoint: urlEndPoint
-            },
-            success: function(apiData){
-                $(".loader_container").hide();
-                if (apiData["responseCode"] == 200) {
-                    $(".token_block").addClass("hidden");
-                    $(".status_summary").text("200 OK");
-                    localStorage.runresponse = JSON.stringify(apiData["data"]);
-                    $(".run_response_textarea pre").html(JSON.stringify(apiData["data"]));
-                    $(".run_response_textarea pre").jsonViewer(JSON.parse($(".run_response_textarea pre").text()), options);
-                } else if (apiData["responseCode"] == 401) {
-                    $(".token_block").removeClass("hidden");
-                    $(".status_summary").text("401 Unauthorized");
-                    $(".token_summary").text(apiData["token"]);
-                }
-                $(".time_summary").text(apiData["timetaken"]+" ms");
-                var size = (apiData["size"]/1024);
-                if (size < 1) {
-                    $(".size_summary").text(apiData["size"]+" B");
-                } else {
-                    $(".size_summary").text(size.toFixed(2)+" KB");
-                }
-            },
-            error: function(){
-                $(".loader_container").hide();
+        if ($("#enable_profiling").prop("checked")) {
+            var tmpFrequency = $("#profiling_frequency").val().trim();
+            if (tmpFrequency != "" && tmpFrequency > 1) {
+                frequency = tmpFrequency;
+            } else {
+                frequency = 10;
             }
-        });
+            averageTime = 0;
+            runnerCounter = 1;
+            profiling(method, params, headers, urlEndPoint);
+        } else {
+            $.ajax({
+                url: "run",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    method: method,
+                    params: params,
+                    headers: headers,
+                    urlEndPoint: urlEndPoint
+                },
+                success: function(apiData){
+                    $(".loader_container").hide();
+                    if (apiData["responseCode"] == 200) {
+                        $(".token_block").addClass("hidden");
+                        $(".status_summary").text("200 OK");
+                        localStorage.runresponse = JSON.stringify(apiData["data"]);
+                        $(".run_response_textarea").html("<pre>"+JSON.stringify(apiData["data"])+"</pre>");
+                        $(".run_response_textarea pre").jsonViewer(JSON.parse($(".run_response_textarea pre").text()), options);
+                    } else if (apiData["responseCode"] == 401) {
+                        $(".token_block").removeClass("hidden");
+                        $(".status_summary").text("401 Unauthorized");
+                        $(".token_summary").text(apiData["token"]);
+                        localStorage.runresponse = JSON.stringify(apiData["data"]);
+                        $(".run_response_textarea").html("<pre>"+JSON.stringify(apiData["data"])+"</pre>");
+                        $(".run_response_textarea pre").jsonViewer(JSON.parse($(".run_response_textarea pre").text()), options);
+                    } else {
+                        $(".status_summary").text(apiData["responseCode"]);
+                        $(".run_response_textarea").html(apiData["data"]);
+                    }
+                    $(".time_summary").text(apiData["timetaken"]+" ms");
+                    var size = (apiData["size"]/1024);
+                    if (size < 1) {
+                        $(".size_summary").text(apiData["size"]+" B");
+                    } else {
+                        $(".size_summary").text(size.toFixed(2)+" KB");
+                    }
+                },
+                error: function(){
+                    $(".loader_container").hide();
+                }
+            });
+        }
     }
 });
+
+function profiling (
+    method,
+    params,
+    headers,
+    urlEndPoint
+) {
+    $.ajax({
+        url: "run",
+        type: "POST",
+        dataType: "json",
+        data: {
+            method: method,
+            params: params,
+            headers: headers,
+            urlEndPoint: urlEndPoint
+        },
+        success: function(apiData){
+            if (apiData["responseCode"] == 200) {
+                runnerCounter ++;
+                averageTime += apiData["timetaken"];
+                if (runnerCounter == frequency) {
+                    successNotification("Average time taken is <b>"+(averageTime/frequency).toFixed(2)+" ms</b> for <b>"+frequency+"</b> iteration(s).");
+                    $(".loader_container").hide();
+                } else {
+                    profiling(method, params, headers, urlEndPoint);
+                }
+            } else if (apiData["responseCode"] == 401) {
+                $(".token_block").removeClass("hidden");
+                $(".status_summary").text("401 Unauthorized");
+                $(".token_summary").text(apiData["token"]);
+                localStorage.runresponse = JSON.stringify(apiData["data"]);
+                $(".run_response_textarea").html("<pre>"+JSON.stringify(apiData["data"])+"</pre>");
+                $(".run_response_textarea pre").jsonViewer(JSON.parse($(".run_response_textarea pre").text()), options);
+            } else {
+                $(".status_summary").text(apiData["responseCode"]);
+                $(".run_response_textarea").html(apiData["data"]);
+            }
+            $(".time_summary").text(apiData["timetaken"]+" ms");
+            var size = (apiData["size"]/1024);
+            if (size < 1) {
+                $(".size_summary").text(apiData["size"]+" B");
+            } else {
+                $(".size_summary").text(size.toFixed(2)+" KB");
+            }
+        },
+        error: function(){
+            $(".loader_container").hide();
+        }
+    });
+}
 
 $(".run_api_add").on("click", function(){
     $(".loader_container").show();
